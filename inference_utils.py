@@ -31,6 +31,7 @@ class VideoReader(Dataset):
 class VideoWriter:
     def __init__(self, path, frame_rate, bit_rate=1000000):
         self.container = av.open(path, mode='w')
+        #self.stream = self.container.add_stream('h264', rate=round(frame_rate))
         # OverflowError when adding stream with float framerate
         # https://github.com/PyAV-Org/PyAV/issues/242
         self.stream = self.container.add_stream('h264', rate='{0:.4f}'.format(round(frame_rate, 2)))

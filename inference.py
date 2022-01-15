@@ -183,7 +183,7 @@ if __name__ == '__main__':
     parser.add_argument('--output-alpha', type=str)
     parser.add_argument('--output-foreground', type=str)
     parser.add_argument('--output-type', type=str, required=True, choices=['video', 'png_sequence'])
-    parser.add_argument('--output-video-mbps', type=int, default=1)
+    parser.add_argument('--output-video-mbps', type=int, default=50)
     parser.add_argument('--seq-chunk', type=int, default=1)
     parser.add_argument('--num-workers', type=int, default=0)
     parser.add_argument('--disable-progress', action='store_true')
