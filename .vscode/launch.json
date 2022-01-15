@@ -1,0 +1,37 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            // "env":{
+            //     "CUDA_VISIBLE_DEVICES":"0"
+            // }
+
+            // /*--- inference_speed_test.py ---*/
+            // "args":["--model-variant", "mobilenetv3",
+            //         "--resolution", "1920", "1080",
+            //         "--downsample-ratio", "0.25",
+            //         "--precision", "float32" ],
+
+            /*--- inference.py ---*/
+            "args":["--variant", "mobilenetv3",
+                    //"--variant", "resnet50",
+                    "--checkpoint", "DOWNLOAD/rvm_mobilenetv3.pth",
+                    //"--checkpoint", "DOWNLOAD/rvm_resnet50.pth",
+                    "--device", "cuda",
+                    //"--downsample-ratio", "0.25",
+                    "--input-source", "VIDEO/c3_fhd.mp4",
+                    "--output-type", "video",
+                    "--output-composition", "OUTPUT/com.mp4",
+                    "--output-alpha", "OUTPUT/pha.mp4",
+                    "--output-foreground", "OUTPUT/fgr.mp4"],
+        }
+    ]
+}
