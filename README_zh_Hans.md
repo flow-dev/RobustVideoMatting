@@ -10,6 +10,7 @@
 
 ## 更新
 
+* [2021年11月3日] 修复了 [train.py](https://github.com/PeterL1n/RobustVideoMatting/commit/48effc91576a9e0e7a8519f3da687c0d3522045f) 的 bug。
 * [2021年9月16日] 代码重新以 GPL-3.0 许可发布。
 * [2021年8月25日] 公开代码和模型。
 * [2021年7月27日] 论文被 WACV 2022 收录。
@@ -24,7 +25,7 @@
     </a>
 </p>
 
-视频中的所有素材都提供下载，可用于测试模型：[Google Drive](https://drive.google.com/drive/folders/1VFnWwuu-YXDKG-N6vcjK_nL7YZMFapMU?usp=sharing) 或[百度网盘](https://pan.baidu.com/s/1igMteDwN5rO1Sn7YIhBlvQ)（密码: tb3w）
+视频中的所有素材都提供下载，可用于测试模型：[Google Drive](https://drive.google.com/drive/folders/1VFnWwuu-YXDKG-N6vcjK_nL7YZMFapMU?usp=sharing)
 
 <br>
 
@@ -155,7 +156,9 @@ convert_video(
     model,                           # 模型，可以加载到任何设备（cpu 或 cuda）
     input_source='input.mp4',        # 视频文件，或图片序列文件夹
     output_type='video',             # 可选 "video"（视频）或 "png_sequence"（PNG 序列）
-    output_composition='output.mp4', # 若导出视频，提供文件路径。若导出 PNG 序列，提供文件夹路径
+    output_composition='com.mp4',    # 若导出视频，提供文件路径。若导出 PNG 序列，提供文件夹路径
+    output_alpha="pha.mp4",          # [可选项] 输出透明度预测
+    output_foreground="fgr.mp4",     # [可选项] 输出前景预测
     output_video_mbps=4,             # 若导出视频，提供视频码率
     downsample_ratio=None,           # 下采样比，可根据具体视频调节，或 None 选择自动
     seq_chunk=12,                    # 设置多帧并行计算
@@ -231,4 +234,7 @@ convert_video = torch.hub.load("PeterL1n/RobustVideoMatting", "converter")
 * [NCNN C++ Android](https://github.com/FeiGeChuanShu/ncnn_Android_RobustVideoMatting) ([@FeiGeChuanShu](https://github.com/FeiGeChuanShu))
 * [lite.ai.toolkit](https://github.com/DefTruth/RobustVideoMatting.lite.ai.toolkit) ([@DefTruth](https://github.com/DefTruth))
 * [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/Robust-Video-Matting) ([@AK391](https://github.com/AK391))
-* [带有 NatML 的 Unity 引擎](https://hub.natml.ai/@natsuite/robust-video-matting) ([@natsuite](https://github.com/natsuite))
+* [带有 NatML 的 Unity 引擎](https://hub.natml.ai/@natsuite/robust-video-matting) ([@natsuite](https://github.com/natsuite))  
+* [MNN C++ Demo](https://github.com/DefTruth/lite.ai.toolkit/blob/main/lite/mnn/cv/mnn_rvm.cpp) ([@DefTruth](https://github.com/DefTruth))
+* [TNN C++ Demo](https://github.com/DefTruth/lite.ai.toolkit/blob/main/lite/tnn/cv/tnn_rvm.cpp) ([@DefTruth](https://github.com/DefTruth))
+

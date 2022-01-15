@@ -329,6 +329,8 @@ class Trainer:
             {'params': self.model.backbone.parameters(), 'lr': self.args.learning_rate_backbone},
             {'params': self.model.aspp.parameters(), 'lr': self.args.learning_rate_aspp},
             {'params': self.model.decoder.parameters(), 'lr': self.args.learning_rate_decoder},
+            {'params': self.model.project_mat.parameters(), 'lr': self.args.learning_rate_decoder},
+            {'params': self.model.project_seg.parameters(), 'lr': self.args.learning_rate_decoder},
             {'params': self.model.refiner.parameters(), 'lr': self.args.learning_rate_refiner},
         ])
         self.scaler = GradScaler()
@@ -471,7 +473,7 @@ class Trainer:
     def random_crop(self, *imgs):
         h, w = imgs[0].shape[-2:]
         w = random.choice(range(w // 2, w))
-        h = random.choice(range(w // 2, h))
+        h = random.choice(range(h // 2, h))
         results = []
         for img in imgs:
             B, T = img.shape[:2]

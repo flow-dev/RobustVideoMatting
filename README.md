@@ -10,6 +10,7 @@ Official repository for the paper [Robust High-Resolution Video Matting with Tem
 
 ## News
 
+* [Nov 03 2021] Fixed a bug in [train.py](https://github.com/PeterL1n/RobustVideoMatting/commit/48effc91576a9e0e7a8519f3da687c0d3522045f).
 * [Sep 16 2021] Code is re-released under GPL-3.0 license.
 * [Aug 25 2021] Source code and pretrained models are published.
 * [Jul 27 2021] Paper is accepted by WACV 2022.
@@ -25,7 +26,7 @@ Watch the showreel video ([YouTube](https://youtu.be/Jvzltozpbpk), [Bilibili](ht
     </a>
 </p>
 
-All footage in the video are available in [Google Drive](https://drive.google.com/drive/folders/1VFnWwuu-YXDKG-N6vcjK_nL7YZMFapMU?usp=sharing) and [Baidu Pan](https://pan.baidu.com/s/1igMteDwN5rO1Sn7YIhBlvQ) (code: tb3w).
+All footage in the video are available in [Google Drive](https://drive.google.com/drive/folders/1VFnWwuu-YXDKG-N6vcjK_nL7YZMFapMU?usp=sharing).
 
 <br>
 
@@ -156,7 +157,9 @@ convert_video(
     model,                           # The model, can be on any device (cpu or cuda).
     input_source='input.mp4',        # A video file or an image sequence directory.
     output_type='video',             # Choose "video" or "png_sequence"
-    output_composition='output.mp4', # File path if video; directory path if png sequence.
+    output_composition='com.mp4',    # File path if video; directory path if png sequence.
+    output_alpha="pha.mp4",          # [Optional] Output the raw alpha prediction.
+    output_foreground="fgr.mp4",     # [Optional] Output the raw foreground prediction.
     output_video_mbps=4,             # Output video mbps. Not needed for png sequence.
     downsample_ratio=None,           # A hyperparameter to adjust or use None for auto.
     seq_chunk=12,                    # Process n frames at once for better parallelism.
@@ -232,4 +235,7 @@ Speed is measured with `inference_speed_test.py` for reference.
 * [NCNN C++ Android](https://github.com/FeiGeChuanShu/ncnn_Android_RobustVideoMatting) ([@FeiGeChuanShu](https://github.com/FeiGeChuanShu))
 * [lite.ai.toolkit](https://github.com/DefTruth/RobustVideoMatting.lite.ai.toolkit) ([@DefTruth](https://github.com/DefTruth))
 * [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/Robust-Video-Matting) ([@AK391](https://github.com/AK391))
-* [Unity Engine demo with NatML](https://hub.natml.ai/@natsuite/robust-video-matting) ([@natsuite](https://github.com/natsuite))
+* [Unity Engine demo with NatML](https://hub.natml.ai/@natsuite/robust-video-matting) ([@natsuite](https://github.com/natsuite))  
+* [MNN C++ Demo](https://github.com/DefTruth/lite.ai.toolkit/blob/main/lite/mnn/cv/mnn_rvm.cpp) ([@DefTruth](https://github.com/DefTruth))
+* [TNN C++ Demo](https://github.com/DefTruth/lite.ai.toolkit/blob/main/lite/tnn/cv/tnn_rvm.cpp) ([@DefTruth](https://github.com/DefTruth))
+
