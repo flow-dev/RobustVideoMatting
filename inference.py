@@ -2,14 +2,12 @@
 python inference.py \
     --variant mobilenetv3 \
     --checkpoint "CHECKPOINT" \
-    --device cuda \
+    --precision "float32" \
     --input-source "input.mp4" \
     --output-type video \
     --output-composition "composition.mp4" \
     --output-alpha "alpha.mp4" \
     --output-foreground "foreground.mp4" \
-    --output-video-mbps 4 \
-    --seq-chunk 1
 """
 
 import torch
@@ -33,8 +31,10 @@ def convert_video(model,
                   seq_chunk: int = 1,
                   num_workers: int = 0,
                   progress: bool = True,
-                  device: Optional[str] = None,
-                  dtype: Optional[torch.dtype] = None):
+                  precision: str = 'float32',
+                  device: Optional[str] = 'cuda',
+                  dtype: Optional[torch.dtype] = None,
+                  torchscript: Optional[bool] = False,):
     
     """
     Args:
@@ -51,8 +51,7 @@ def convert_video(model,
         seq_chunk: Number of frames to process at once. Increase it for better parallelism.
         num_workers: PyTorch's DataLoader workers. Only use >0 for image input.
         progress: Show progress bar.
-        device: Only need to manually provide if model is a TorchScript freezed model.
-        dtype: Only need to manually provide if model is a TorchScript freezed model.
+        precision: float16 or float32.
     """
     
     assert downsample_ratio is None or (downsample_ratio > 0 and downsample_ratio <= 1), 'Downsample ratio must be between 0 (exclusive) and 1 (inclusive).'
@@ -106,11 +105,7 @@ def convert_video(model,
 
     # Inference
     model = model.eval()
-    if device is None or dtype is None:
-        param = next(model.parameters())
-        dtype = param.dtype
-        device = param.device
-    
+
     if (output_composition is not None) and (output_type == 'video'):
         bgr = torch.tensor([120, 255, 155], device=device, dtype=dtype).div(255).view(1, 1, 3, 1, 1)
     
@@ -123,8 +118,17 @@ def convert_video(model,
                 if downsample_ratio is None:
                     downsample_ratio = auto_downsample_ratio(*src.shape[2:])
 
-                src = src.to(device, dtype, non_blocking=True).unsqueeze(0) # [B, T, C, H, W]
+                if(torchscript):
+                    src = src.to(device, dtype, non_blocking=True)# [T, C, H, W] 4ch
+                else:
+                    src = src.to(device, dtype, non_blocking=True).unsqueeze(0) # [B, T, C, H, W] 5ch
+
                 fgr, pha, *rec = model(src, *rec, downsample_ratio)
+
+                if(torchscript):
+                    # In the case of torchscript, the output is 4ch, convert it to 5ch.
+                    fgr = fgr.unsqueeze(0)
+                    pha = pha.unsqueeze(0)
 
                 if output_foreground is not None:
                     writer_fgr.write(fgr[0])
@@ -138,7 +142,7 @@ def convert_video(model,
                         com = torch.cat([fgr, pha], dim=-3)
                     writer_com.write(com[0])
                 
-                bar.update(src.size(1))
+                bar.update(fgr.size(1))
 
     finally:
         # Clean up
@@ -158,15 +162,35 @@ def auto_downsample_ratio(h, w):
 
 
 class Converter:
-    def __init__(self, variant: str, checkpoint: str, device: str):
-        self.model = MattingNetwork(variant).eval().to(device)
-        self.model.load_state_dict(torch.load(checkpoint, map_location=device))
-        self.model = torch.jit.script(self.model)
-        self.model = torch.jit.freeze(self.model)
+    def __init__(self, variant: str, checkpoint: str, device: str, precision: str):
+
+        self.torchscript = False
+
         self.device = device
-    
+        # Set precision float16 or float32
+        if(precision=="float16"):
+            self.dtype = torch.float16
+        else:
+            self.dtype = torch.float32
+
+        root, ext = os.path.splitext(checkpoint)
+
+        if(ext == ".torchscript"):
+            # Load torchscript model
+            self.model = torch.jit.load(checkpoint).to(device)
+            self.model = torch.jit.freeze(self.model)
+            self.torchscript = True
+        else:
+            # Load pytorch model
+            self.model = MattingNetwork(variant)
+            self.model.load_state_dict(torch.load(checkpoint, map_location=device))
+            self.model = self.model.to(device=self.device, dtype=self.dtype).eval()
+            self.model = torch.jit.script(self.model)
+            self.model = torch.jit.freeze(self.model)
+            self.torchscript = False
+
     def convert(self, *args, **kwargs):
-        convert_video(self.model, device=self.device, dtype=torch.float32, *args, **kwargs)
+        convert_video(self.model, device=self.device, dtype=self.dtype, torchscript=self.torchscript, *args, **kwargs)
     
 if __name__ == '__main__':
     import argparse
@@ -175,7 +199,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--variant', type=str, required=True, choices=['mobilenetv3', 'resnet50'])
     parser.add_argument('--checkpoint', type=str, required=True)
-    parser.add_argument('--device', type=str, required=True)
+    parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--input-source', type=str, required=True)
     parser.add_argument('--input-resize', type=int, default=None, nargs=2)
     parser.add_argument('--downsample-ratio', type=float)
@@ -187,9 +211,10 @@ if __name__ == '__main__':
     parser.add_argument('--seq-chunk', type=int, default=1)
     parser.add_argument('--num-workers', type=int, default=0)
     parser.add_argument('--disable-progress', action='store_true')
+    parser.add_argument('--precision', type=str, required=True, choices=['float16', 'float32'])
     args = parser.parse_args()
     
-    converter = Converter(args.variant, args.checkpoint, args.device)
+    converter = Converter(args.variant, args.checkpoint, args.device, args.precision)
     converter.convert(
         input_source=args.input_source,
         input_resize=args.input_resize,
@@ -201,7 +226,8 @@ if __name__ == '__main__':
         output_video_mbps=args.output_video_mbps,
         seq_chunk=args.seq_chunk,
         num_workers=args.num_workers,
-        progress=not args.disable_progress
+        progress=not args.disable_progress,
+        precision=args.precision,
     )
     
     
