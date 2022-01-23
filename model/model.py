@@ -43,7 +43,7 @@ class MattingNetwork(nn.Module):
                 r2: Optional[Tensor] = None,
                 r3: Optional[Tensor] = None,
                 r4: Optional[Tensor] = None,
-                downsample_ratio: float = 1,
+                downsample_ratio: float = 0.25,
                 segmentation_pass: bool = False):
         
         if downsample_ratio != 1:

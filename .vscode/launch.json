@@ -20,15 +20,23 @@
             //         "--downsample-ratio", "0.25",
             //         "--precision", "float32" ],
 
+            // /*--- export_torchscript.py ---*/
+            // "args":["--variant", "mobilenetv3",
+            //         //"--variant", "resnet50",
+            //         "--checkpoint", "DOWNLOAD/rvm_mobilenetv3.pth",
+            //         //"--checkpoint", "DOWNLOAD/rvm_resnet50.pth",
+            //         "--precision", "float16",
+            //         "--output", "exp.torchscript",],
+
             /*--- inference.py ---*/
             "args":["--variant", "mobilenetv3",
                     //"--variant", "resnet50",
-                    "--checkpoint", "DOWNLOAD/rvm_mobilenetv3_fp16.torchscript",
+                    "--checkpoint", "RVM_mobilenetv3_fp16_sc025.torchscript",
                     //"--checkpoint", "DOWNLOAD/rvm_mobilenetv3.pth",
                     //"--checkpoint", "DOWNLOAD/rvm_resnet50.pth",
                     //"--downsample-ratio", "0.25",
                     "--precision", "float16",
-                    "--input-source", "VIDEO/b7_fhd.mp4",
+                    "--input-source", "VIDEO/fg_megane.mp4",
                     "--output-type", "video",
                     "--output-composition", "OUTPUT/com.mp4",
                     "--output-alpha", "OUTPUT/pha.mp4",

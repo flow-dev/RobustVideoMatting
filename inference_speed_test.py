@@ -44,6 +44,7 @@ class InferenceSpeedTest:
             rec = None, None, None, None
             for _ in tqdm(range(1000)):
                 fgr, pha, *rec = self.model(src, *rec, self.args.downsample_ratio)
+                #fgr, pha, *rec = self.model(src, *rec)
                 torch.cuda.synchronize()
 
 if __name__ == '__main__':
