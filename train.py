@@ -353,6 +353,8 @@ class Trainer:
                 # Low resolution pass
                 self.train_mat(true_fgr, true_pha, true_bgr, downsample_ratio=1, tag='lr')
 
+#                self.train_seg(true_fgr, true_pha, log_label='seg_image')
+
                 # High resolution pass
                 if self.args.train_hr:
                     true_fgr, true_pha, true_bgr = self.load_next_mat_hr_sample()

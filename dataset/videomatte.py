@@ -2,6 +2,9 @@ import os
 import random
 from torch.utils.data import Dataset
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+import glob
 
 from .augmentation import MotionAugmentation
 
@@ -16,7 +19,9 @@ class VideoMatteDataset(Dataset):
                  seq_sampler,
                  transform=None):
         self.background_image_dir = background_image_dir
-        self.background_image_files = os.listdir(background_image_dir)
+#        self.background_image_files = os.listdir(background_image_dir)
+        self.background_image_files = sorted([*glob.glob(os.path.join(self.background_image_dir, '**', '*.jpg'), recursive=True),
+                                              *glob.glob(os.path.join(self.background_image_dir, '**', '*.png'), recursive=True)])
         self.background_video_dir = background_video_dir
         self.background_video_clips = sorted(os.listdir(background_video_dir))
         self.background_video_frames = [sorted(os.listdir(os.path.join(background_video_dir, clip)))
@@ -51,7 +56,8 @@ class VideoMatteDataset(Dataset):
         return fgrs, phas, bgrs
     
     def _get_random_image_background(self):
-        with Image.open(os.path.join(self.background_image_dir, random.choice(self.background_image_files))) as bgr:
+#        with Image.open(os.path.join(self.background_image_dir, random.choice(self.background_image_files))) as bgr:
+        with Image.open(os.path.join(random.choice(self.background_image_files))) as bgr:
             bgr = self._downsample_if_needed(bgr.convert('RGB'))
         bgrs = [bgr] * self.seq_length
         return bgrs
@@ -83,6 +89,7 @@ class VideoMatteDataset(Dataset):
                     pha = self._downsample_if_needed(pha.convert('L'))
             fgrs.append(fgr)
             phas.append(pha)
+#            print(os.path.join(self.videomatte_dir, 'fgr', clip, frame))
         return fgrs, phas
     
     def _downsample_if_needed(self, img):

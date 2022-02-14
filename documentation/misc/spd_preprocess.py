@@ -3,6 +3,8 @@ import supervisely_lib as sly
 import numpy as np
 import os
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from tqdm import tqdm
 
 # Download dataset from <https://supervise.ly/explore/projects/supervisely-person-dataset-23304/datasets>

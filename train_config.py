@@ -34,35 +34,35 @@ Background Video Train/Valid
 DATA_PATHS = {
     
     'videomatte': {
-        'train': '../matting-data/VideoMatte240K_JPEG_SD/train',
-        'valid': '../matting-data/VideoMatte240K_JPEG_SD/valid',
+        'train': '/data2/BackgroundMattingV2_Dataset/VideoMatte240K_JPEG_SD/train',
+        'valid': '/data2/BackgroundMattingV2_Dataset/VideoMatte240K_JPEG_SD/test',
     },
     'imagematte': {
-        'train': '../matting-data/ImageMatte/train',
-        'valid': '../matting-data/ImageMatte/valid',
+        'train': '/data2/RVM/ImageMatte/train',
+        'valid': '/data2/PPM-100',
     },
     'background_images': {
-        'train': '../matting-data/Backgrounds/train',
-        'valid': '../matting-data/Backgrounds/valid',
+        'train': '/data2/BackgroundMattingV2_Dataset/Backgrounds/train',
+        'valid': '/data2/BackgroundMattingV2_Dataset/Backgrounds/test',
     },
     'background_videos': {
-        'train': '../matting-data/BackgroundVideos/train',
-        'valid': '../matting-data/BackgroundVideos/valid',
+        'train': '/data2/BackgroundMattingV2_Dataset/BackgroundVideosTrain/train',
+        'valid': '/data2/BackgroundMattingV2_Dataset/BackgroundVideosTest/test',
     },
     
     
     'coco_panoptic': {
-        'imgdir': '../matting-data/coco/train2017/',
-        'anndir': '../matting-data/coco/panoptic_train2017/',
-        'annfile': '../matting-data/coco/annotations/panoptic_train2017.json',
+        'imgdir': '/data2/MSCOCO/train2017/',
+        'anndir': '/data2/MSCOCO/panoptic_annotations_trainval2017/annotations/panoptic_train2017/',
+        'annfile': '/data2/MSCOCO/panoptic_annotations_trainval2017/annotations/panoptic_train2017.json',
     },
     'spd': {
-        'imgdir': '../matting-data/SuperviselyPersonDataset/img',
-        'segdir': '../matting-data/SuperviselyPersonDataset/seg',
+        'imgdir': '/data2/SuperviselyPersonDataset/img',
+        'segdir': '/data2/SuperviselyPersonDataset/seg',
     },
     'youtubevis': {
-        'videodir': '../matting-data/YouTubeVIS/train/JPEGImages',
-        'annfile': '../matting-data/YouTubeVIS/train/instances.json',
+        'videodir': '/data2/YouTubeVIS_2021/train/JPEGImages',
+        'annfile': '/data2/YouTubeVIS_2021/train/instances.json',
     }
     
 }

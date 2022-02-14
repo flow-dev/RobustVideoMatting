@@ -1,6 +1,8 @@
 import os
 from torch.utils.data import Dataset
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 class SuperviselyPersonDataset(Dataset):

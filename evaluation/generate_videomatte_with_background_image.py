@@ -13,6 +13,8 @@ import pims
 import numpy as np
 import random
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser()

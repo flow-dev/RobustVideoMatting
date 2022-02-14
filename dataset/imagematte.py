@@ -2,6 +2,10 @@ import os
 import random
 from torch.utils.data import Dataset
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+import glob
 
 from .augmentation import MotionAugmentation
 
@@ -16,9 +20,15 @@ class ImageMatteDataset(Dataset):
                  seq_sampler,
                  transform):
         self.imagematte_dir = imagematte_dir
-        self.imagematte_files = os.listdir(os.path.join(imagematte_dir, 'fgr'))
+#        self.imagematte_files = os.listdir(os.path.join(imagematte_dir, 'fgr'))
+        self.imagematte_fgr_files = sorted([*glob.glob(os.path.join(self.imagematte_dir, 'fgr', '**', '*.jpg'), recursive=True),
+                                            *glob.glob(os.path.join(self.imagematte_dir, 'fgr', '**', '*.png'), recursive=True)])
+        self.imagematte_pha_files = sorted([*glob.glob(os.path.join(self.imagematte_dir, 'pha', '**', '*.jpg'), recursive=True),
+                                            *glob.glob(os.path.join(self.imagematte_dir, 'pha', '**', '*.png'), recursive=True)])
         self.background_image_dir = background_image_dir
-        self.background_image_files = os.listdir(background_image_dir)
+#        self.background_image_files = os.listdir(background_image_dir)
+        self.background_image_files = sorted([*glob.glob(os.path.join(self.background_image_dir, '**', '*.jpg'), recursive=True),
+                                              *glob.glob(os.path.join(self.background_image_dir, '**', '*.png'), recursive=True)])
         self.background_video_dir = background_video_dir
         self.background_video_clips = os.listdir(background_video_dir)
         self.background_video_frames = [sorted(os.listdir(os.path.join(background_video_dir, clip)))
@@ -29,7 +39,8 @@ class ImageMatteDataset(Dataset):
         self.transform = transform
         
     def __len__(self):
-        return max(len(self.imagematte_files), len(self.background_image_files) + len(self.background_video_clips))
+#        return max(len(self.imagematte_files), len(self.background_image_files) + len(self.background_video_clips))
+        return max(len(self.imagematte_fgr_files), len(self.background_image_files) + len(self.background_video_clips))
     
     def __getitem__(self, idx):
         if random.random() < 0.5:
@@ -45,8 +56,10 @@ class ImageMatteDataset(Dataset):
         return fgrs, phas, bgrs
     
     def _get_imagematte(self, idx):
-        with Image.open(os.path.join(self.imagematte_dir, 'fgr', self.imagematte_files[idx % len(self.imagematte_files)])) as fgr, \
-             Image.open(os.path.join(self.imagematte_dir, 'pha', self.imagematte_files[idx % len(self.imagematte_files)])) as pha:
+#        with Image.open(os.path.join(self.imagematte_dir, 'fgr', self.imagematte_files[idx % len(self.imagematte_files)])) as fgr, \
+#             Image.open(os.path.join(self.imagematte_dir, 'pha', self.imagematte_files[idx % len(self.imagematte_files)])) as pha:
+        with Image.open(os.path.join(self.imagematte_fgr_files[idx % len(self.imagematte_fgr_files)])) as fgr, \
+             Image.open(os.path.join(self.imagematte_pha_files[idx % len(self.imagematte_pha_files)])) as pha:
             fgr = self._downsample_if_needed(fgr.convert('RGB'))
             pha = self._downsample_if_needed(pha.convert('L'))
         fgrs = [fgr] * self.seq_length
@@ -54,7 +67,8 @@ class ImageMatteDataset(Dataset):
         return fgrs, phas
     
     def _get_random_image_background(self):
-        with Image.open(os.path.join(self.background_image_dir, self.background_image_files[random.choice(range(len(self.background_image_files)))])) as bgr:
+#        with Image.open(os.path.join(self.background_image_dir, self.background_image_files[random.choice(range(len(self.background_image_files)))])) as bgr:
+        with Image.open(os.path.join(self.background_image_files[random.choice(range(len(self.background_image_files)))])) as bgr:
             bgr = self._downsample_if_needed(bgr.convert('RGB'))
         bgrs = [bgr] * self.seq_length
         return bgrs

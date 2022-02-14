@@ -5,6 +5,8 @@ import numpy as np
 import random
 from torch.utils.data import Dataset
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from torchvision import transforms
 from torchvision.transforms import functional as F
 
