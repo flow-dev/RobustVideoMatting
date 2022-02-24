@@ -353,8 +353,6 @@ class Trainer:
                 # Low resolution pass
                 self.train_mat(true_fgr, true_pha, true_bgr, downsample_ratio=1, tag='lr')
 
-#                self.train_seg(true_fgr, true_pha, log_label='seg_image')
-
                 # High resolution pass
                 if self.args.train_hr:
                     true_fgr, true_pha, true_bgr = self.load_next_mat_hr_sample()
@@ -366,8 +364,19 @@ class Trainer:
                     self.train_seg(true_img, true_seg, log_label='seg_video')
                 else:
                     true_img, true_seg = self.load_next_seg_image_sample()
-                    self.train_seg(true_img.unsqueeze(1), true_seg.unsqueeze(1), log_label='seg_image')
-                    
+                    self.train_seg(true_img.unsqueeze(1), true_seg.unsqueeze(1), log_label='seg_image')                
+
+                # # Segmentation pass(fuzzbuzz)
+                # if self.step % 3 == 0:
+                #     true_img, true_seg = self.load_next_seg_video_sample()
+                #     self.train_seg(true_img, true_seg, log_label='seg_video')
+                # elif self.step % 5 == 0:
+                #     self.train_seg(true_fgr, true_pha, log_label='seg_image')
+                # else:
+                #     true_img, true_seg = self.load_next_seg_image_sample()
+                #     self.train_seg(true_img.unsqueeze(1), true_seg.unsqueeze(1), log_label='seg_image')                
+
+
                 if self.step % self.args.checkpoint_save_interval == 0:
                     self.save()
                     

@@ -42,7 +42,7 @@ DATA_PATHS = {
         'valid': '/data2/PPM-100',
     },
     'background_images': {
-        'train': '/data2/BackgroundMattingV2_Dataset/Backgrounds/train',
+        'train': '/data2/BackgroundMattingV2_Dataset/Backgrounds/train/PASS_dataset_000/0',
         'valid': '/data2/BackgroundMattingV2_Dataset/Backgrounds/test',
     },
     'background_videos': {
