@@ -38,12 +38,12 @@ DATA_PATHS = {
         'valid': '/data2/BackgroundMattingV2_Dataset/VideoMatte240K_JPEG_SD/test',
     },
     'imagematte': {
-        'train': '/data2/RVM/ImageMatte/train',
-        'valid': '/data2/PPM-100',
+        'train': '/data2/RVM/ImageMatte/train_human',
+        'valid': '/data2/Kaijin_Mask_Dataset/Kaijin_Valid/jpg',
     },
     'background_images': {
-        'train': '/data2/BackgroundMattingV2_Dataset/Backgrounds/train/PASS_dataset_000/0',
-        'valid': '/data2/BackgroundMattingV2_Dataset/Backgrounds/test',
+        'train': '/data2/BackgroundMattingV2_Dataset/Backgrounds/PASS_dataset_000/0',
+        'valid': '/data2/BackgroundMattingV2_Dataset/Backgrounds/train',
     },
     'background_videos': {
         'train': '/data2/BackgroundMattingV2_Dataset/BackgroundVideosTrain/train',
