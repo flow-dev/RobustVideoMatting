@@ -34,16 +34,16 @@ Background Video Train/Valid
 DATA_PATHS = {
     
     'videomatte': {
-        'train': '/data2/BackgroundMattingV2_Dataset/VideoMatte240K_JPEG_SD/train',
-        'valid': '/data2/BackgroundMattingV2_Dataset/VideoMatte240K_JPEG_SD/test',
+        'train': '/data2/BackgroundMattingV2_Dataset/VideoMatte240K_JPEG_HD/train',
+        'valid': '/data2/BackgroundMattingV2_Dataset/VideoMatte240K_JPEG_HD/test',
     },
     'imagematte': {
         'train': '/data2/RVM/ImageMatte/train_human',
-        'valid': '/data2/Kaijin_Mask_Dataset/Kaijin_Valid/jpg',
+        'valid': '/data2/220807_SegValidation/RVM_jpg',
     },
     'background_images': {
-        'train': '/data2/BackgroundMattingV2_Dataset/Backgrounds/PASS_dataset_000/0',
-        'valid': '/data2/BackgroundMattingV2_Dataset/Backgrounds/train',
+        'train': '/data2/BackgroundMattingV2_Dataset/Backgrounds/train/PASS_dataset_link/0',
+        'valid': '/data2/220807_SegValidation/jpg/bgr_one',
     },
     'background_videos': {
         'train': '/data2/BackgroundMattingV2_Dataset/BackgroundVideosTrain/train',

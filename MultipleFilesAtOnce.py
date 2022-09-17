@@ -15,6 +15,7 @@ def GenerateOutputPath(INPUT_PTH):
     basename_without_ext = os.path.splitext(os.path.basename(INPUT_PTH))[0]
     #print(dirname, basename_without_ext)
     output_path = os.path.join(dirname,basename_without_ext)
+
     return output_path
 
 
@@ -31,6 +32,8 @@ def RunCommand(INPUT_PTH):
     result = subprocess.call(["python3", "inference.py",
                             "--variant", "resnet50",
                             "--checkpoint", "rvm_resnet50.pth",
+#                            "--variant", "mobilenetv3",
+#                            "--checkpoint", "epoch-17-iter-330000.pth",
                             "--precision", "float16",
                             "--input-source", INPUT_PTH,
                             "--output-type", "video",
@@ -67,7 +70,7 @@ def GetDataGroupListWithExt(TARGET_DIR, ext):
 
 if __name__ == '__main__':
     
-    TARGET_DIR = "../../Sanc_eki_video_220228"
+    TARGET_DIR = "/data2/220910_Sancyoku_Remoteextras_edgecraft"
 
     # DataGroup Debug
     PrintDataGroupList(TARGET_DIR)

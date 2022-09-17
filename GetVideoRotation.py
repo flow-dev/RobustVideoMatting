@@ -46,13 +46,14 @@ def get_rotation(file_path_with_file_name):
     return rotation
 
 def OverWriteRotationMeta(INPUT_PTH):
-
+    '''overwrite rotation mata'''
     # Generate output path
     output_path = GenerateOutputPath(INPUT_PTH)
 
     rotate_path = output_path + "_rotate.mp4"
 
     rotation = get_rotation(INPUT_PTH)
+
     if rotation == 90:  # If video is in portrait
        # RunCommand
         result = subprocess.call(["ffmpeg", "-i", INPUT_PTH, "-metadata:s:v:0", "rotate=0",rotate_path])
@@ -96,7 +97,7 @@ def GetDataGroupListWithExt(TARGET_DIR, ext):
 
 if __name__ == '__main__':
     
-    TARGET_DIR = "../../Sanc_eki_video_220228"
+    TARGET_DIR = "/data2/220910_Sancyoku_Remoteextras_edgecraft"
 
     # DataGroup Debug
     PrintDataGroupList(TARGET_DIR)
